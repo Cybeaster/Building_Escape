@@ -1,4 +1,4 @@
-// Copyright Michael Bridges 2019
+// Copyright Michael Bridges 
 
 
 #include "DoorOpen.h"
@@ -7,35 +7,60 @@
 // Sets default values for this component's properties
 UDoorOpen::UDoorOpen()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
-// Called when the game starts
+
 void UDoorOpen::BeginPlay()
 {
+
 	Super::BeginPlay();
-	FRotator Current_rotation = GetOwner()->GetActorRotation();
-	FRotator Modifing_rotation = Current_rotation + FRotator(0.f, 90.f, 0.f);
-	GetOwner()->SetActorRotation(Modifing_rotation);
-	// ...
-	
+
+	InitYaw = GetOwner()->GetActorRotation().Yaw;
+	CurrentYaw = InitYaw;
+	TargetYaw = InitYaw + 90.f;
+
+	ActorThatOpen = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	DoorLastOpend = 0.f;
+
 }
 
 
 // Called every frame
 void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Yaw is equal: %f"), GetOwner()->GetActorRotation().Yaw);
-	float CurrentYaw = GetOwner()->GetActorRotation().Yaw;
-	FRotator OpenDoor(0.f, TargetYaw, 0.f);
-	OpenDoor.Yaw =  FMath::Lerp(CurrentYaw,TargetYaw,0.2f);
-	GetOwner()->SetActorRotation(OpenDoor);
+	/*CurrentYaw = GetOwner()->GetActorRotation().Yaw;
+	OpenDoor.Yaw = FMath::FInterpTo(CurrentYaw, TargetYaw,DeltaTime, 2.f);
+	GetOwner()->SetActorRotation(OpenDoor);*/
+	if (TriggerPlate && TriggerPlate->IsOverlappingActor(ActorThatOpen)) {
+		OpenDoor(DeltaTime);
+		DoorLastOpend = GetWorld()->GetTimeSeconds();
+	}
+	if (TriggerPlate && !TriggerPlate->IsOverlappingActor(ActorThatOpen))
+	{
+		if(GetWorld()->GetTimeSeconds() - DoorLastOpend >= DoorCloseDeltaSeconds)
+		ClosingTheDoor(DeltaTime);
+	}
+
+	
+	
 }
  
+void UDoorOpen::OpenDoor(const float& DeltaTime){
+	CurrentYaw = FMath::Lerp(CurrentYaw, TargetYaw, DeltaTime * 1.f);
+	DoorRotation = GetOwner()->GetActorRotation();
+	DoorRotation.Yaw = CurrentYaw;
+	GetOwner()->SetActorRotation(DoorRotation);
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
+}
+
+void UDoorOpen::ClosingTheDoor(const float& DeltaTime)
+{
+	CurrentYaw = FMath::Lerp(CurrentYaw, InitYaw , DeltaTime * 1.f);
+	DoorRotation = GetOwner()->GetActorRotation();
+	DoorRotation.Yaw = CurrentYaw;
+	GetOwner()->SetActorRotation(DoorRotation);
+
+}

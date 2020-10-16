@@ -1,9 +1,12 @@
-// Copyright Michael Bridges 2019
+﻿// Copyright Michael Bridges 2019
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Engine/TriggerVolume.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "DoorOpen.generated.h"
 
 
@@ -19,11 +22,33 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	float FL = 90.f;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	void OpenDoor(const float& DeltaTime);
+	void ClosingTheDoor(const float& DeltaTime);
 	private:
-		float TargetYaw = 90.f;
+
+		FRotator DoorRotation;
+
+		 float CurrentYaw;
+
+		 float InitYaw;
+
+		 UPROPERTY(EditAnyWhere)
+		 float TargetYaw;
+			
+		UPROPERTY(EditAnyWhere)
+		 float DoorLastOpend;
+
+		UPROPERTY(EditAnyWhere)
+		 float DoorCloseDeltaSeconds;
+		 UPROPERTY(EditAnywhere)
+		 ATriggerVolume* TriggerPlate;
+
+	   	 UPROPERTY(EditAnyWhere)
+	   	 AActor* ActorThatOpen;
+		
+	
 };
