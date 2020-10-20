@@ -30,18 +30,17 @@ public:
 	
 	void Grab();
 	void Free();
+
 	void FindPhysicsHandle();
 	void SetupInputComponent();
+	
+	FVector GetPlayerPosition() const;
+	FVector GetPlayerReach() const;
 
 
 private:
 	
 	UPrimitiveComponent* ComponentToGrab;
-
-	FVector PlayerViewPointLocation;
-	FRotator PlayerViewPointRotation;
-
-	FVector	LineTraceEnd;
 
 	FHitResult ResultItem;
 
@@ -51,10 +50,7 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 
-	FHitResult GetFirstPhysicsBodyInReach(
-		FVector& PlayerViewPointLocation,
-		FRotator& PlayerViewPointRotation,
-		FVector& LineTraceEnd,
-		FHitResult& ResultItem) const;
+	FHitResult GetFirstPhysicsBodyInReach(FHitResult& ResultItem) const;
+
 	
 };
