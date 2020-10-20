@@ -30,25 +30,30 @@ public:
 	void ClosingTheDoor(const float& DeltaTime);
 	private:
 
-		FRotator DoorRotation;
+	   	 FRotator DoorRotation;
 
 		 float CurrentYaw;
-
 		 float InitYaw;
 
 		 UPROPERTY(EditAnyWhere)
 		 float TargetYaw;
 			
-		UPROPERTY(EditAnyWhere)
-		 float DoorLastOpend;
+		 float DoorLastOpend = 0.f;
 
-		UPROPERTY(EditAnyWhere)
+		 UPROPERTY(EditAnyWhere)
 		 float DoorCloseDeltaSeconds;
+
 		 UPROPERTY(EditAnywhere)
 		 ATriggerVolume* TriggerPlate;
 
 	   	 UPROPERTY(EditAnyWhere)
 	   	 AActor* ActorThatOpen;
+
+		 UPROPERTY(EditAnyWhere)
+			 float DoorClosingSpeed = 1;
+
+		 UPROPERTY(EditAnyWhere)
+			 float DoorOpeningSpeed = 1;
 		
 	
 };

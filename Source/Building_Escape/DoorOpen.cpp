@@ -22,8 +22,9 @@ void UDoorOpen::BeginPlay()
 	TargetYaw = InitYaw + 90.f;
 
 	ActorThatOpen = GetWorld()->GetFirstPlayerController()->GetPawn();
-
+	 
 	DoorLastOpend = 0.f;
+
 
 }
 
@@ -31,9 +32,7 @@ void UDoorOpen::BeginPlay()
 // Called every frame
 void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	/*CurrentYaw = GetOwner()->GetActorRotation().Yaw;
-	OpenDoor.Yaw = FMath::FInterpTo(CurrentYaw, TargetYaw,DeltaTime, 2.f);
-	GetOwner()->SetActorRotation(OpenDoor);*/
+
 	if (TriggerPlate && TriggerPlate->IsOverlappingActor(ActorThatOpen)) {
 		OpenDoor(DeltaTime);
 		DoorLastOpend = GetWorld()->GetTimeSeconds();
@@ -49,16 +48,17 @@ void UDoorOpen::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 }
  
 void UDoorOpen::OpenDoor(const float& DeltaTime){
-	CurrentYaw = FMath::Lerp(CurrentYaw, TargetYaw, DeltaTime * 1.f);
+
+	CurrentYaw = FMath::Lerp(CurrentYaw, TargetYaw, DeltaTime * DoorOpeningSpeed);
 	DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetOwner()->GetActorRotation().ToString());
 }
+
 
 void UDoorOpen::ClosingTheDoor(const float& DeltaTime)
 {
-	CurrentYaw = FMath::Lerp(CurrentYaw, InitYaw , DeltaTime * 1.f);
+	CurrentYaw = FMath::Lerp(CurrentYaw, InitYaw , DeltaTime * DoorClosingSpeed);
 	DoorRotation = GetOwner()->GetActorRotation();
 	DoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(DoorRotation);
