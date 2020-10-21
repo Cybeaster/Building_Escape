@@ -7,6 +7,8 @@
 #include "Engine/TriggerVolume.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/PrimitiveComponent.h"
+#include "Components/AudioComponent.h"
 #include "DoorOpen.generated.h"
 
 
@@ -28,7 +30,13 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OpenDoor(const float& DeltaTime);
 	void ClosingTheDoor(const float& DeltaTime);
+	float TotalMassOfActors() const;
+	void FindAudioComponent();
+	void FindPressurePlate() const;
 	private:
+
+		 UPROPERTY(EditAnywhere)
+		 float MassMakeDoorOpen = 0.f;
 
 	   	 FRotator DoorRotation;
 
@@ -44,16 +52,21 @@ public:
 		 float DoorCloseDeltaSeconds;
 
 		 UPROPERTY(EditAnywhere)
-		 ATriggerVolume* TriggerPlate;
-
-	   	 UPROPERTY(EditAnyWhere)
-	   	 AActor* ActorThatOpen;
+		 ATriggerVolume* TriggerPlate = nullptr;
 
 		 UPROPERTY(EditAnyWhere)
-			 float DoorClosingSpeed = 1;
+		 float DoorClosingSpeed = 1;
 
 		 UPROPERTY(EditAnyWhere)
-			 float DoorOpeningSpeed = 1;
+		float DoorOpeningSpeed = 1;
+
+		 UPROPERTY()
+		 UAudioComponent* DoorSound = nullptr;
+
+		 bool OpenDoorSound = false;
+
+		 bool CloseDoorSound = true;
+
 		
 	
 };

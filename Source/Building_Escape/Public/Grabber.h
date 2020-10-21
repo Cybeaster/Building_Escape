@@ -40,17 +40,16 @@ public:
 
 private:
 	
-	UPrimitiveComponent* ComponentToGrab;
+	UPrimitiveComponent* ComponentToGrab = nullptr;
 
 	FHitResult ResultItem;
 
 	UPROPERTY(EditAnyWhere)
 		float Reach = 100.f;
-
-	UPhysicsHandleComponent* PhysicsHandle = nullptr;
-	UInputComponent* InputComponent = nullptr;
-
 	FHitResult GetFirstPhysicsBodyInReach(FHitResult& ResultItem) const;
 
-	
+	UPROPERTY()
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UPROPERTY()
+	UInputComponent* InputComponent = nullptr;
 };

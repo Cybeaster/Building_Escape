@@ -21,7 +21,7 @@ void UGrabber::BeginPlay()
 
 void UGrabber::FindPhysicsHandle() {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle == nullptr){
+	if (!PhysicsHandle){
 		UE_LOG(LogTemp, Error, TEXT("Physics Handle component haven't been found"));
 	}
 	
@@ -31,7 +31,6 @@ void UGrabber::SetupInputComponent() {
 
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent) {
-		UE_LOG(LogTemp, Error, TEXT("Movement component found on %s"), *GetOwner()->GetName());
 		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
 		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Free);
 	}
@@ -70,8 +69,13 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 void UGrabber::Grab() {
 	FHitResult HitResult = GetFirstPhysicsBodyInReach(ResultItem);
-		ComponentToGrab = HitResult.GetComponent();
-	if (HitResult.GetActor()) {
+	ComponentToGrab = HitResult.GetComponent();
+	if (HitResult.GetActor()) 
+	{
+		if (!PhysicsHandle) {
+			UE_LOG(LogTemp, Error, TEXT("!Physicshandle couldn't be found!")) 
+			return;
+		}
 		PhysicsHandle->GrabComponentAtLocation
 		(
 			ComponentToGrab,
@@ -82,6 +86,11 @@ void UGrabber::Grab() {
 
 }
 void UGrabber::Free() {
+	if (!PhysicsHandle) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("!Physicshandle couldn't be found!"))
+		return;
+	}
 		PhysicsHandle->ReleaseComponent();
 }
 
